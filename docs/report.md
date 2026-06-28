@@ -1,6 +1,3 @@
-Here's the full report written out so you can read it directly:
-
----
 
 # Sandwich Panel Flexure Validation Study
 **HexPly® 8552/AS4 Plain Weave Skins + Rohacell® 51 IGF Core**
