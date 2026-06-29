@@ -28,7 +28,7 @@ This is the sandwich extension of the [UD CFRP Tensile Coupon Validation](https:
 |---|---|---|---|---|---|
 | Face sheet (max stress) | 92.5 MPa | 828 MPa | 0.112 | 8.9× | ✅ Pass |
 | Core shear | 0.486 MPa | 0.8 MPa | 0.608 | 1.6× | ✅ Pass |
-| Face sheet wrinkling | 92.5 MPa | ~180 MPa | 0.510 | 2.0× | ✅ Pass |
+| Face sheet wrinkling    | 92.5 MPa   | ~242 MPa  | 0.382 | 2.6×    | ✅ Pass |
 
 Core shear is the critical mode — expected for a low-density PMI core like Rohacell 51.
 
@@ -169,7 +169,7 @@ Compare against sandwich beam theory: core shear τ = F/(2bd), deflection δ = F
 ```
 Face sheet:  IRF = 92.5 / 828  = 0.112  → RF 8.9×
 Core shear:  IRF = 0.486 / 0.8 = 0.608  → RF 1.6×
-Wrinkling:   IRF = 92.5 / 180  = 0.510  → RF 2.0×
+Wrinkling:   IRF = 92.5 / 242  = 0.382  → RF 2.6×
 ```
 
 ---
