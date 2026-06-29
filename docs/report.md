@@ -1,4 +1,5 @@
 
+
 # Sandwich Panel Flexure Validation Study
 **HexPly® 8552/AS4 Plain Weave Skins + Rohacell® 51 IGF Core**
 Ansys ACP + Mechanical 3-Point Bend FEA per ASTM C393
@@ -125,15 +126,80 @@ With flexural rigidity D = E_f × t_f × d² × b / 2, the bending term is ~0.49
 
 ## 8. Failure Mode Assessment
 
-Inverse Reserve Factors (IRF) computed manually from FEA stresses against datasheet allowables. IRF below 1.0 indicates no failure at the applied 1,000 N load.
+At the applied load of 1,000 N, each sandwich failure mode is checked independently. The Inverse Reserve Factor (IRF) is the ratio of applied stress to allowable stress; IRF < 1.0 means no failure, and Reserve Factor (RF) = 1/IRF.
 
-| Failure Mode | FEA Stress | Allowable | IRF | Reserve Factor | Status |
+### 8.1 Face Sheet Strength (in-plane)
+
+The skins carry the bending moment as in-plane tension (bottom) and compression (top). The peak face sheet stress from FEA is the governing value.
+
+```
+σ_face     = 92.5 MPa        (FEA, max σyy in skin)
+XT (warp)  = 828 MPa         (HexPly 8552/AS4 PW datasheet)
+
+IRF = σ_face / XT = 92.5 / 828 = 0.112
+RF  = 1 / 0.112 = 8.9×
+```
+
+The skin operates at ~11% of its tensile allowable. Face sheet strength is not the limiting mode.
+
+### 8.2 Core Shear
+
+The core carries essentially all the transverse shear. The shear force in 3-point bend is V = F/2 on each side of the load. The average core shear stress:
+
+```
+V        = F / 2 = 1000 / 2 = 500 N
+b        = 75 mm     (width)
+d        = 10.195 mm (skin centroid-to-centroid distance = core + one skin thickness)
+
+τ_core   = V / (b × d) = 500 / (75 × 10.195) = 0.654 MPa   (analytical peak)
+τ_FEA    = 0.486 MPa                                         (FEA free-span avg)
+
+S_core   = 0.8 MPa   (Rohacell 51 shear strength)
+
+IRF (analytical) = 0.654 / 0.8 = 0.818  → RF 1.2×
+IRF (FEA)        = 0.486 / 0.8 = 0.608  → RF 1.6×
+```
+
+Core shear is the lowest-reserve mode. Using the conservative analytical peak, the reserve is only 1.2× — this is the design driver.
+
+### 8.3 Face Sheet Wrinkling
+
+Wrinkling is a local buckling of the compression skin into the core. The critical wrinkling stress (Hoff-Mautner formula):
+
+```
+σ_wr = 0.5 × (E_f × E_c × G_c)^(1/3)
+
+E_f  = 68,000 MPa  (skin modulus)
+E_c  = 70 MPa      (core modulus)
+G_c  = 24 MPa      (core shear modulus)
+
+σ_wr = 0.5 × (68,000 × 70 × 24)^(1/3)
+     = 0.5 × (114,240,000)^(1/3)
+     = 0.5 × 485 = 242 MPa
+```
+
+The constant varies by reference (0.5 to 0.91 depending on derivation). Using the conservative 0.5:
+
+```
+IRF = σ_face / σ_wr = 92.5 / 242 = 0.382  → RF 2.6×
+```
+
+The compression skin is at ~38% of its wrinkling allowable.
+
+### 8.4 Shear Crimping
+
+Shear crimping is a special case of wrinkling at very short wavelength, governed by core shear modulus. It initiates when the core shear capacity is exhausted, so it is bounded by the same check as core shear (Section 8.2). Since core shear is already the binding constraint, crimping does not govern separately here.
+
+### 8.5 Summary
+
+| Failure Mode | Applied | Allowable | IRF | RF | Governing? |
 |---|---|---|---|---|---|
-| Face sheet (max stress) | 92.5 MPa | 828 MPa | 0.112 | 8.9× | Pass |
-| Core shear | 0.486 MPa | 0.8 MPa | 0.608 | 1.6× | Pass |
-| Face sheet wrinkling | 92.5 MPa | ~180 MPa | 0.510 | 2.0× | Pass |
+| Face sheet strength | 92.5 MPa | 828 MPa | 0.112 | 8.9× | No |
+| Core shear (FEA) | 0.486 MPa | 0.8 MPa | 0.608 | 1.6× | **Critical** |
+| Core shear (analytical) | 0.654 MPa | 0.8 MPa | 0.818 | 1.2× | **Critical** |
+| Face sheet wrinkling | 92.5 MPa | 242 MPa | 0.382 | 2.6× | No |
 
-Core shear has the lowest reserve factor, confirming that for a low-density PMI core such as Rohacell 51, core shear is the critical design driver — in agreement with sandwich design theory.
+**Core shear governs the design**, consistent with sandwich theory for low-density PMI cores. The panel has a minimum reserve factor of 1.2× (analytical) at 1,000 N.
 
 ---
 
@@ -142,7 +208,7 @@ Core shear has the lowest reserve factor, confirming that for a low-density PMI 
 - A three-material ACP stackup (woven skin / foam core / woven skin) was successfully defined and transferred to Static Structural as a shell model — no separate epoxy or solid core body required.
 - FEA reproduces the expected sandwich bending behavior: antisymmetric skin stress and sign-reversing core shear.
 - Core shear stress and mid-span deflection agree with analytical sandwich beam theory within engineering tolerance (~16–25%).
-- All four sandwich failure modes remain well below allowables; core shear is the critical mode, as theory predicts for low-density PMI cores.
+- All four sandwich failure modes remain below allowables; core shear is the critical mode with a minimum reserve factor of 1.2×, as theory predicts for low-density PMI cores.
 - The sandwich material cards and layup workflow are validated for use in subsequent UAV wing skin design.
 
 ---
@@ -155,6 +221,3 @@ Core shear has the lowest reserve factor, confirming that for a low-density PMI 
 4. Allen, H.G. *Analysis and Design of Structural Sandwich Panels*. Pergamon Press, 1969.
 5. *CMH-17-6: Composite Materials Handbook, Volume 6. Structural Sandwich Composites*.
 
----
-
-That's the complete report. You can paste this straight into your GitHub repo as a `docs/report.md` file, or into Google Docs if you want a document format. Want me to clean up the README the same way for pasting?
