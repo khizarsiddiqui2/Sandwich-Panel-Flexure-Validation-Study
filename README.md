@@ -2,6 +2,10 @@
 HexPly® 8552/AS4 Plain Weave Skins + Rohacell® 51 IGF Core  Ansys ACP + Mechanical 3-Point Bend FEA per ASTM C393
 --
 
+## Author
+
+**Khizar Siddiqui** — Aerospace & Mechanical Engineer
+[GitHub](https://github.com/khizarsiddiqui2)
 ## Overview
 
 This repository documents an FEA validation study of a composite sandwich panel under three-point bending, modeled in Ansys Composite PrepPost (ACP) and Ansys Mechanical. Woven carbon/epoxy face sheets are bonded to a closed-cell PMI foam core. The study verifies the FEA model against analytical sandwich beam theory for face sheet bending stress, core shear stress, and mid-span deflection, and confirms all sandwich failure modes stay below allowables.
@@ -180,9 +184,5 @@ Wrinkling:   IRF = 92.5 / 180  = 0.510  → RF 2.0×
 
 ---
 
-## Author
-
-**Khizar Siddiqui** — Aerospace & Mechanical Engineer
-[GitHub](https://github.com/khizarsiddiqui2)
 
 > Related: [UD CFRP Tensile Validation](https://github.com/khizarsiddiqui2/UD-CFRP-Tensile-Coupon-Validation-Study) · [NACA0012 CFD Validation](https://github.com/khizarsiddiqui2/NACA0012-CFD-Validation)
